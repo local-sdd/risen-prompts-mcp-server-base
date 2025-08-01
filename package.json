@@ -1,0 +1,33 @@
+{
+  "name": "mcp-risen-prompts",
+  "version": "1.0.0",
+  "description": "RISEN Prompt Engineering MCP Server - A structured approach to prompt engineering",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "keywords": [
+    "mcp",
+    "prompt-engineering",
+    "risen",
+    "ai",
+    "claude",
+    "prompts"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.1",
+    "sqlite3": "^5.1.6",
+    "uuid": "^9.0.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Futuretechaiguy/mcp-risen-prompts.git"
+  }
+}

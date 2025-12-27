@@ -1,12 +1,21 @@
 {
 	"name": "mcp-risen-prompts",
 	"version": "1.0.0",
-	"description": "RISEN Prompt Engineering MCP Server - A structured approach to prompt engineering",
+	"author": "",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/local-sdd/risen-prompts-mcp-server-base.git"
+	},
 	"main": "server.js",
-	"type": "module",
-	"scripts": {
-		"start": "node server.js",
-		"test": "node --test"
+	"devDependencies": {
+		"@types/bun": "1.3.5"
+	},
+	"peerDependencies": {
+		"typescript": "5.9.3"
+	},
+	"description": "RISEN Prompt Engineering MCP Server - A structured approach to prompt engineering",
+	"engines": {
+		"node": ">=16.0.0"
 	},
 	"keywords": [
 		"mcp",
@@ -16,18 +25,15 @@
 		"claude",
 		"prompts"
 	],
-	"author": "",
 	"license": "MIT",
+	"scripts": {
+		"start": "node server.js",
+		"test": "node --test"
+	},
+	"type": "module",
 	"dependencies": {
-		"@modelcontextprotocol/sdk": "^1.0.1",
-		"sqlite3": "^5.1.6",
-		"uuid": "^9.0.1"
-	},
-	"engines": {
-		"node": ">=16.0.0"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/local-sdd/risen-prompts-mcp-server-base.git"
+		"@modelcontextprotocol/sdk": "1.25.1",
+		"sqlite3": "5.1.7",
+		"uuid": "13.0.0"
 	}
 }

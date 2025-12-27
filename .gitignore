@@ -57,3 +57,5 @@ package-lock.json.placeholder
 config.local.*
 *_backup.*
 .next/
+
+!QWEN.md

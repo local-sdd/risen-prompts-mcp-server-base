@@ -27,7 +27,7 @@
 	],
 	"license": "MIT",
 	"scripts": {
-		"start": "node server.js",
+		"start": "server.js",
 		"test": "node --test"
 	},
 	"type": "module",

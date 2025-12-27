@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { promisify } from "node:util";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
@@ -6,10 +9,7 @@ import {
 	ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import fs from "fs/promises";
-import path from "path";
 import sqlite3 from "sqlite3";
-import { fileURLToPath } from "url";
-import { promisify } from "util";
 import { v4 as uuidv4 } from "uuid";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -316,34 +316,57 @@ function validateRISEN(template) {
 function calculateQualityScore(template) {
 	let score = 0;
 
-	// Role quality (20 points)
-	if (template.role && template.role.length > 30) score += 10;
-	if (template.role && template.role.length > 50) score += 10;
+	if (template.role) {
+		// Role quality (20 points)
+		if (template.role.length > 30) {
+			score += 10;
+		}
+		if (template.role.length > 50) {
+			score += 10;
+		}
+	}
 
-	// Instructions clarity (20 points)
-	if (template.instructions && template.instructions.length > 50) score += 10;
-	if (template.instructions && template.instructions.includes("{{"))
-		score += 10; // Uses variables
+	if (template.instructions) {
+		// Instructions clarity (20 points)
+		if (template.instructions.length > 50) {
+			score += 10;
+		}
+		if (template.instructions.includes("{{")) {
+			score += 10; // Uses variables
+		}
+	}
 
 	// Steps detail (20 points)
 	try {
 		const steps = JSON.parse(template.steps || "[]");
 		if (steps.length >= 3) score += 10;
 		if (steps.length >= 5) score += 10;
-	} catch (e) {}
+	} catch (e) {
+		throw new Error(`Invalid steps JSON: ${e.message}`);
+	}
 
-	// Expectations specificity (20 points)
-	if (template.expectations && template.expectations.length > 40) score += 10;
-	if (template.expectations && /\d+/.test(template.expectations)) score += 10; // Contains numbers/metrics
+	if (template.expectations) {
+		// Expectations specificity (20 points)
+		if (template.expectations.length > 40) {
+			score += 10;
+		}
+		if (/\d+/.test(template.expectations)) {
+			score += 10; // Contains numbers/metrics
+		}
+	}
 
-	// Narrowing focus (20 points)
-	if (template.narrowing && template.narrowing.length > 30) score += 10;
-	if (
-		template.narrowing &&
-		(template.narrowing.includes("avoid") ||
-			template.narrowing.includes("focus"))
-	)
-		score += 10;
+	if (template.narrowing) {
+		// Narrowing focus (20 points)
+		if (template.narrowing.length > 30) {
+			score += 10;
+		}
+		if (
+			template.narrowing.includes("avoid") ||
+			template.narrowing.includes("focus")
+		) {
+			score += 10;
+		}
+	}
 
 	return score;
 }
@@ -387,7 +410,9 @@ function generateSuggestions(template) {
 				suggestion: "Some steps are too brief - add more detail for clarity",
 			});
 		}
-	} catch (e) {}
+	} catch (e) {
+		throw new Error(`Invalid steps format: ${e.message}`);
+	}
 
 	// Expectations suggestions
 	if (template.expectations && !/\d+/.test(template.expectations)) {
@@ -435,7 +460,9 @@ function applyVariables(template, variables) {
 			const steps = JSON.parse(result.steps);
 			const updatedSteps = steps.map((step) => step.replace(regex, value));
 			result.steps = JSON.stringify(updatedSteps);
-		} catch (e) {}
+		} catch (e) {
+			throw new Error(`Invalid steps format: ${e.message}`);
+		}
 	});
 
 	return result;
